@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Gurumaa 🎄</title>
+
+<style>
+/* ---------- GLOBAL ---------- */
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(180deg, #00111a, #002233);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    color: white;
+}
+
+.scene {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.scene.active {
+    display: flex;
+}
+
+/* ---------- CARD ---------- */
+.card {
+    width: 400px;
+    height: 480px;
+    perspective: 1500px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.3s ease;
+}
+
+.card.flip .card-inner {
+    transform: rotateY(180deg);
+}
+
+.face {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px);
+    border-radius: 25px;
+    padding: 35px;
+    backface-visibility: hidden;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255,255,255,0.25);
+}
+
+/* ---------- FRONT ---------- */
+.front h1 {
+    font-size: 2.4rem;
+    animation: glow 2s infinite alternate;
+}
+
+.tree {
+    font-size: 4.5rem;
+    margin: 20px 0;
+    animation: float 3s infinite;
+}
+
+/* ---------- BACK ---------- */
+.back {
+    transform: rotateY(180deg);
+}
+
+.type {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    min-height: 150px;
+}
+
+/* ---------- FINAL ---------- */
+.final {
+    text-align: center;
+    animation: fadeUp 1.8s ease forwards;
+}
+
+.final h2 {
+    font-size: 2.4rem;
+    color: #ffd700;
+}
+
+/* ---------- BUTTON ---------- */
+button {
+    margin-top: 20px;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px gold;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes glow {
+    from { text-shadow: 0 0 10px gold; }
+    to { text-shadow: 0 0 30px red; }
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- SNOW ---------- */
+.snow {
+    position: absolute;
+    top: -10px;
+    font-size: 14px;
+    animation: fall linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCENE 1 -->
+<div class="scene active" id="scene1">
+    <div class="card" id="card">
+        <div class="card-inner">
+            <div class="face front">
+                <div class="tree">🎄</div>
+                <h1>Merry Christmas</h1>
+                <p>Tap to open your card 🎁</p>
+                <button onclick="openCard()">Open</button>
+            </div>
+
+            <div class="face back">
+                <h2>Gurumaa 💖</h2>
+                <div class="type" id="typing"></div>
+                <button onclick="goScene(2)">Next ✨</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCENE 2 -->
+<div class="scene" id="scene2">
+    <div class="final">
+        <h2>🎁 One Question 🎁</h2>
+        <p style="font-size:1.3rem;">
+            Do you know what my special gift is this year?
+        </p>
+        <button onclick="goScene(3)">Tell Me 👀</button>
+    </div>
+</div>
+
+<!-- SCENE 3 -->
+<div class="scene" id="scene3">
+    <div class="final">
+        <h2>It’s YOU 💝</h2>
+        <p style="font-size:1.2rem;">
+            Your presence, your smile,<br>
+            and your warmth make every day special ✨<br><br>
+            Merry Christmas, Gurumaa 🎄❤️
+        </p>
+    </div>
+</div>
+
+<script>
+/* ---------- CARD ---------- */
+function openCard() {
+    document.getElementById("card").classList.add("flip");
+    typeText();
+}
+
+/* ---------- TYPING ---------- */
+const msg =
+"Christmas is about warmth, love, and magic ✨\n\nAnd somehow, you bring all of that just by being YOU 💖";
+let i = 0;
+
+function typeText() {
+    const el = document.getElementById("typing");
+    if (i < msg.length) {
+        el.innerHTML += msg[i] === "\n" ? "<br>" : msg[i];
+        i++;
+        setTimeout(typeText, 40);
+    }
+}
+
+/* ---------- SCENE CONTROL ---------- */
+function goScene(n) {
+    document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+    document.getElementById("scene" + n).classList.add("active");
+
+    if (n === 3) {
+        document.body.style.background =
+            "linear-gradient(180deg, #ff512f, #dd2476)";
+    }
+}
+
+/* ---------- SNOW ---------- */
+function snow() {
+    const s = document.createElement("div");
+    s.className = "snow";
+    s.innerHTML = "❄";
+    s.style.left = Math.random() * innerWidth + "px";
+    s.style.fontSize = (Math.random() * 10 + 12) + "px";
+    s.style.animationDuration = (Math.random() * 4 + 3) + "s";
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 7000);
+}
+setInterval(snow, 220);
+</script>
+
+</body>
+</html>
